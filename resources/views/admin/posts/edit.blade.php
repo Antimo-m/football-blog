@@ -4,91 +4,130 @@
 
 @section('content')
 
-<div class="page-header">
-    <h2>Modifica Articolo</h2>
-    <p class="text-muted">Aggiorna i dettagli dell'articolo</p>
-</div>
+<div class="d-flex justify-content-center py-4">
 
-{{-- Errori --}}
-@if ($errors->any())
-<div class="alert alert-danger">
-    <strong>Errori di validazione:</strong>
-    <ul class="mb-0">
-        @foreach ($errors->all() as $error)
-        <li>{{ $error }}</li>
-        @endforeach
-    </ul>
-</div>
-@endif
+    <div class="w-100" style="max-width: 680px;">
 
-<div class="card" style="max-width: 800px;">
-    <div class="card-header">
-        <h3>Modifica articolo</h3>
+        {{-- HEADER --}}
+        <div class="text-center mb-4">
+            <h1 class="fw-bold fs-3 mb-1">Modifica Articolo</h1>
+            <p class="text-muted mb-0">Aggiorna i dettagli del contenuto</p>
+        </div>
+
+        {{-- ERRORI --}}
+        @if ($errors->any())
+        <div class="alert alert-danger rounded-4">
+            <strong>Errori di validazione:</strong>
+            <ul class="mb-0">
+                @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+        @endif
+
+        {{-- CARD --}}
+        <div class="card shadow-sm border-0 rounded-4">
+            <div class="card-body p-4">
+
+                <form action="{{ route('admin.posts.update', $post) }}" method="POST">
+                    @csrf
+                    @method('PUT')
+
+                    {{-- Titolo --}}
+                    <div class="mb-4">
+                        <label class="form-label fw-semibold fs-5">Titolo</label>
+                        <input type="text" name="title"
+                            class="form-control form-control-lg"
+                            value="{{ old('title', $post->title) }}">
+
+                        @error('title')
+                        <div class="text-danger small mt-1">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    {{-- Categoria --}}
+                    <div class="mb-4">
+                        <label class="form-label fw-semibold fs-5">Categoria</label>
+                        <select name="category_id" class="form-select form-select-lg">
+                            <option value="">Seleziona categoria</option>
+                            @foreach($categories as $category)
+                            <option value="{{ $category->id }}" {{ old('category_id', $post->category_id) == $category->id ? 'selected' : '' }}>
+                                {{ $category->name }}
+                            </option>
+                            @endforeach
+                        </select>
+
+                        @error('category_id')
+                        <div class="text-danger small mt-1">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    {{-- Contenuto --}}
+                    <div class="mb-4">
+                        <label class="form-label fw-semibold fs-5">Contenuto</label>
+                        <textarea name="content"
+                            class="form-control"
+                            rows="5">{{ old('content', $post->content) }}</textarea>
+
+                        @error('content')
+                        <div class="text-danger small mt-1">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    {{-- Squadre (pill style come create) --}}
+                    <div class="mb-4">
+                        <label class="form-label fw-semibold fs-5">Squadre</label>
+
+                        <div class="d-flex flex-wrap gap-2">
+                            @foreach($teams as $team)
+                            <div class="form-check">
+
+                                <input
+                                    class="btn-check"
+                                    type="checkbox"
+                                    name="teams[]"
+                                    value="{{ $team->id }}"
+                                    id="team{{ $team->id }}"
+                                    {{ in_array($team->id, old('teams', $post->teams->pluck('id')->toArray())) ? 'checked' : '' }}>
+
+                                <label
+                                    class="btn btn-outline-primary rounded-pill px-3 py-1"
+                                    for="team{{ $team->id }}">
+                                    {{ $team->name }}
+                                </label>
+
+                            </div>
+                            @endforeach
+                        </div>
+
+                        @error('teams')
+                        <div class="text-danger small mt-1">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    {{-- AZIONI --}}
+                    <div class="d-flex justify-content-between align-items-center mt-4">
+
+                        <a href="{{ route('admin.posts.index') }}"
+                            class="btn btn-outline-secondary rounded-pill px-4">
+                            Annulla
+                        </a>
+
+                        <button type="submit"
+                            class="btn btn-primary rounded-pill px-4">
+                            Aggiorna
+                        </button>
+
+                    </div>
+
+                </form>
+
+            </div>
+        </div>
+
     </div>
-    <div class="card-body">
-        <form action="{{ route('admin.posts.update', $post) }}" method="POST">
-            @csrf
-            @method('PUT')
 
-            {{-- Titolo --}}
-            <div class="form-group">
-                <label for="title">Titolo *</label>
-                <input type="text" id="title" name="title" class="form-control" value="{{ old('title', $post->title) }}">
-                @error('title')
-                <span class="form-error">{{ $message }}</span>
-                @enderror
-            </div>
-
-            {{-- Contenuto --}}
-            <div class="form-group">
-                <label for="content">Contenuto *</label>
-                <textarea id="content" name="content" class="form-control" rows="6">{{ old('content', $post->content) }}</textarea>
-                @error('content')
-                <span class="form-error">{{ $message }}</span>
-                @enderror
-            </div>
-
-            {{-- Categoria --}}
-            <div class="form-group">
-                <label for="category_id">Categoria *</label>
-                <select id="category_id" name="category_id" class="form-select">
-                    <option value="">Seleziona una categoria</option>
-                    @foreach($categories as $category)
-                    <option value="{{ $category->id }}" {{ old('category_id', $post->category_id) == $category->id ? 'selected' : '' }}>
-                        {{ $category->name }}
-                    </option>
-                    @endforeach
-                </select>
-                @error('category_id')
-                <span class="form-error">{{ $message }}</span>
-                @enderror
-            </div>
-
-            {{-- Squadre (Multiple) --}}
-            <div class="form-group">
-                <label for="teams">Squadre *</label>
-                <select id="teams" name="teams[]" class="form-select" multiple style="min-height: 120px;">
-                    @foreach($teams as $team)
-                    <option value="{{ $team->id }}" {{ $post->teams->contains($team->id) ? 'selected' : '' }}>
-                        {{ $team->name }}
-                    </option>
-                    @endforeach
-                </select>
-                <small class="form-text">Seleziona una o più squadre (Ctrl/Cmd + Click)</small>
-                @error('teams')
-                <span class="form-error">{{ $message }}</span>
-                @enderror
-            </div>
-
-            {{-- Pulsanti --}}
-            <div class="form-actions">
-                <button type="submit" class="btn btn-primary">
-                    <i class="fas fa-save"></i> Aggiorna Articolo
-                </button>
-                <a href="{{ route('admin.posts.index') }}" class="btn btn-secondary">Annulla</a>
-            </div>
-        </form>
-    </div>
 </div>
 
 @endsection

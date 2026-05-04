@@ -56,7 +56,7 @@
                     value="{{ $team->id }}"
                     class="form-check-input">
 
-                <label class="form-check-label">
+                <label class="form-check-label" for="{ $team->id }}">
                     {{ $team->name }}
                 </label>
             </div>

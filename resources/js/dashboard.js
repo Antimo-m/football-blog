@@ -5,7 +5,9 @@ document.addEventListener('DOMContentLoaded', function () {
     const sidebarClose = document.getElementById('sidebarClose');
     const userToggle = document.getElementById('userToggle');
     const userMenu = document.getElementById('userMenu');
+
     console.log('dashboard.js caricato');
+
     // MOBILE SIDEBAR
     if (sidebarToggleMobile && sidebar) {
         sidebarToggleMobile.addEventListener('click', () => {

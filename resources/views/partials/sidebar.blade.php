@@ -54,26 +54,20 @@
 
 
     <!-- USER FOOTER -->
+    {{-- USER BOX --}}
     <div class="sidebar-footer">
 
         <div class="user-box" id="userToggle">
-
-            <div class="user-avatar">
-                {{ auth()->user() ? strtoupper(substr(auth()->user()->name, 0, 1)) : 'U' }}
-            </div>
+            <div class="user-avatar">A</div>
 
             <div class="user-info">
-                <span class="user-name">
-                    {{ auth()->user()->name ?? 'Utente' }}
-                </span>
+                <span class="user-name">antimo</span>
                 <span class="user-role">Admin</span>
             </div>
-
-            <i class="fas fa-chevron-up"></i>
         </div>
 
         {{-- DROPDOWN --}}
-        <div class="user-menu" id="userMenu">
+        <div class="sidebar-user-menu" id="userMenu">
             <a href="{{ route('profile.edit') }}" class="dropdown-item">
                 <i class="fas fa-user"></i> Profilo
             </a>
@@ -87,5 +81,4 @@
         </div>
 
     </div>
-
 </aside>

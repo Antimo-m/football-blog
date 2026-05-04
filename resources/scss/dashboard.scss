@@ -1017,17 +1017,47 @@ body {
 }
 
 
+
 .sidebar-footer {
     position: relative;
 }
 
-/* MENU DROPDOWN */
-.user-menu {
+/* ==================== USER DROPDOWN SIDEBAR ==================== */
+
+.user-box {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px;
+    cursor: pointer;
+    border-radius: 6px;
+    transition: background 0.3s;
+
+    &:hover {
+        background: rgba(255, 255, 255, 0.05);
+    }
+}
+
+.user-info {
+    flex: 1;
+
+    .user-name {
+        display: block;
+        font-size: 13px;
+        font-weight: 600;
+    }
+
+    .user-role {
+        font-size: 11px;
+        color: #aaa;
+    }
+}
+
+.sidebar-user-menu {
     position: absolute;
-    bottom: 60px; // sopra il box utente
+    bottom: 100%;
     left: 0;
     width: 100%;
-
     background: #34495e;
     border-radius: 6px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
@@ -1037,11 +1067,10 @@ body {
     transform: translateY(10px);
     transition: all 0.3s ease;
 
-    z-index: 999;
+    z-index: 2000;
 }
 
-/* STATO APERTO */
-.user-menu.show {
+.sidebar-user-menu.show {
     opacity: 1;
     visibility: visible;
     transform: translateY(0);

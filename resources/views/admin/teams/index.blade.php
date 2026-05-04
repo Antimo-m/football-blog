@@ -1,7 +1,7 @@
 @extends('layouts.dashboard')
 
 @section('content')
-
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
 <div class="container mt-4">
 
     <div class="text-center mb-4">
@@ -38,22 +38,24 @@
                             {{ $team->name }}
                         </td>
 
-                        <td class="text-end px-4">
+                        <td class="text-end">
+                            <div class="d-inline-flex align-items-center gap-2">
 
-                            {{-- EDIT --}}
-                            <a href="{{ route('admin.teams.edit', $team) }}"
-                                class="btn btn-sm btn-outline-warning">
-                                ✏️
-                            </a>
+                               
 
-                            {{-- DELETE --}}
-                            <button
-                                class="btn btn-sm btn-outline-danger"
-                                data-bs-toggle="modal"
-                                data-bs-target="#deleteModal{{ $team->id }}">
-                                🗑
-                            </button>
+                                <a href="{{ route('admin.teams.edit', $team) }}" class="btn btn-sm btn-outline-primary" title="Modifica">
+                                    <i class="fas fa-edit"></i>
+                                </a>
 
+                                <button
+                                    class="btn btn-sm btn-outline-danger"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#deleteModal{{ $team->id }}"
+                                    title="Elimina">
+                                    <i class="bi bi-trash-fill"></i>
+                                </button>
+
+                            </div>
                         </td>
 
                     </tr>
