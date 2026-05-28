@@ -7,11 +7,10 @@ use Illuminate\Support\Str;
 
 class Post extends Model
 {
-   
-
     protected $fillable = [
         'title',
         'content',
+        'writer',
         'image',
         'category_id'
     ];

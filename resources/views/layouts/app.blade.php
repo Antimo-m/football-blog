@@ -13,12 +13,13 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <!-- Vite -->
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @vite(['resources/scss/app.scss', 'resources/js/app.js'])
 </head>
 
 <body>
 
     <div id="app">
+        {{ auth()->check() ? 'LOGGATO' : 'GUEST' }}
 
         {{-- NAVBAR --}}
         <nav class="navbar navbar-expand-md navbar-dark bg-dark shadow-sm">
@@ -77,13 +78,12 @@
                         </li>
                         @else
 
-                        {{-- DROPDOWN BOOTSTRAP --}}
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle"
                                 href="#"
                                 role="button"
                                 data-bs-toggle="dropdown">
-                                {{ Auth::user()->name }}
+                                {{ auth()->user()->name }}
                             </a>
 
                             <ul class="dropdown-menu dropdown-menu-end">
@@ -99,19 +99,13 @@
                                 </li>
 
                                 <li>
-                                    <a class="dropdown-item"
-                                        href="{{ route('logout') }}"
-                                        onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                                        Logout
-                                    </a>
+                                    <form method="POST" action="{{ route('logout') }}">
+                                        @csrf
+                                        <button class="dropdown-item">Logout</button>
+                                    </form>
                                 </li>
 
                             </ul>
-
-                            <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                                @csrf
-                            </form>
-
                         </li>
 
                         @endguest

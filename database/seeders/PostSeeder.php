@@ -50,14 +50,16 @@ class PostSeeder extends Seeder
             $count = Post::where('slug', 'LIKE', "{$baseSlug}%")->count();
             $slug = $count ? "{$baseSlug}-{$count}" : $baseSlug;
 
-            Post::create([
+            $post = Post::create([
                 'title' => $title,
                 'slug' => $slug,
                 'content' => $faker->paragraphs(3, true),
                 'image' => null,
-                'category_id' => $category->id,
-                'team_id' => $team->id,
+                'category_id' => $category->id
             ]);
+            $post->teams()->attach(
+                $teams->random(rand(1, min(3, $teams->count())))->pluck('id')
+            );
         }
     }
 

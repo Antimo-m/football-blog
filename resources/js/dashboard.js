@@ -6,8 +6,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const userToggle = document.getElementById('userToggle');
     const userMenu = document.getElementById('userMenu');
 
-    console.log('dashboard.js caricato');
-
     // MOBILE SIDEBAR
     if (sidebarToggleMobile && sidebar) {
         sidebarToggleMobile.addEventListener('click', () => {
@@ -47,5 +45,57 @@ document.addEventListener('DOMContentLoaded', function () {
             userMenu.classList.remove('show');
         });
     }
+
+    document.querySelectorAll('[data-file-upload]').forEach((upload) => {
+        const input = upload.querySelector('[data-file-input]');
+        const preview = upload.querySelector('[data-upload-preview]');
+        const previewWrapper = preview ? preview.closest('.upload-preview') : null;
+        const confirmation = upload.querySelector('[data-upload-confirmation]');
+        const fileName = upload.parentElement.querySelector('[data-file-name]');
+        const uploadTitle = upload.querySelector('.upload-title');
+
+        if (!input || !preview || !previewWrapper) {
+            return;
+        }
+
+        input.addEventListener('change', () => {
+            const file = input.files && input.files[0];
+
+            if (!file || !file.type.startsWith('image/')) {
+                return;
+            }
+
+            preview.src = URL.createObjectURL(file);
+            preview.onload = () => URL.revokeObjectURL(preview.src);
+            previewWrapper.classList.remove('d-none');
+            upload.classList.add('has-file');
+
+            if (confirmation) {
+                confirmation.classList.remove('d-none');
+            }
+
+            if (fileName) {
+                fileName.textContent = file.name;
+            }
+
+            if (uploadTitle) {
+                uploadTitle.textContent = 'Anteprima immagine selezionata';
+            }
+        });
+    });
+
+    document.querySelectorAll('[data-delete-form]').forEach((form) => {
+        form.addEventListener('submit', () => {
+            const button = form.querySelector('button[type="submit"]');
+
+            if (!button) {
+                return;
+            }
+
+            button.disabled = true;
+            button.dataset.originalText = button.textContent.trim();
+            button.textContent = button.dataset.loadingText || 'Eliminazione...';
+        });
+    });
 
 });

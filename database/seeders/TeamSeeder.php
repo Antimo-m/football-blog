@@ -22,9 +22,19 @@ class TeamSeeder extends Seeder
             'Lazio'
         ];
 
-        foreach ($teams as $team) {
+        $palette = [
+            '#000000', // Juventus
+            '#0055A4', // Inter
+            '#FB090B', // Milan
+            '#00AEEF', // Napoli
+            '#8E1F2F', // Roma
+            '#87CEEB', // Lazio
+        ];
+
+        foreach ($teams as $index => $team) {
             Team::create([
-                'name' => $team
+                'name' => $team,
+                'color' => $palette[$index % count($palette)] 
             ]);
         }
     }

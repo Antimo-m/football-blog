@@ -4,178 +4,438 @@
 
 @section('content')
 
-<div class="container" style="max-width: 1000px;">
+<div class="posts-dashboard-container">
 
-    {{-- HEADER --}}
-    <div class="text-center mb-4">
-        <h1 class="fw-bold fs-3 mb-1">Gestione Articoli</h1>
-        <p class="text-muted mb-0">Crea, modifica e gestisci i tuoi articoli</p>
+    <div class="dashboard-hero">
+
+        <div class="dashboard-hero-shape"></div>
+
+        <div class="dashboard-hero-content">
+
+            <div class="dashboard-hero-icon">
+                <i class="fas fa-newspaper"></i>
+            </div>
+
+            <h1>
+                Gestione Articoli
+            </h1>
+
+            <p>
+                Crea, modifica e organizza tutti gli articoli del tuo blog
+                con una dashboard moderna e professionale.
+            </p>
+
+        </div>
+
     </div>
 
-    {{-- FILTRO --}}
-    <div class="d-flex justify-content-center align-items-center gap-3 mb-4">
+    <div class="dashboard-topbar">
 
-        <div class="card shadow-sm border-0 rounded-4" style="width: 320px;">
-            <div class="card-body py-3 px-3">
+        <div>
 
-                <form id="filterForm" method="GET" action="{{ route('admin.posts.index') }}">
-                    <label for="category_id" class="form-label small text-muted mb-1">
-                        Categoria
-                    </label>
+            <h2>
+                Elenco Articoli
+            </h2>
 
-                    <select name="category_id" id="category_id" class="form-select">
-                        <option value="">Tutte</option>
-                        @foreach($categories as $category)
-                        <option value="{{ $category->id }}" {{ request('category_id') == $category->id ? 'selected' : '' }}>
-                            {{ $category->name }}
-                        </option>
-                        @endforeach
-                    </select>
-                </form>
+            <span>
+                Gestisci rapidamente i contenuti pubblicati
+            </span>
+
+        </div>
+
+        <a href="{{ route('admin.posts.create') }}"
+            class="create-post-btn">
+
+            <i class="bi bi-plus-lg"></i>
+
+
+
+        </a>
+
+    </div>
+
+    <div class="dashboard-filter-card">
+
+        <div class="dashboard-filter-header">
+
+            <div>
+
+                <h5>
+                    Filtri Articoli
+                </h5>
+
+                <p>
+                    Filtra gli articoli per categoria o data
+                </p>
 
             </div>
+
+            <div class="dashboard-filter-icon">
+                <i class="fas fa-filter"></i>
+            </div>
+
         </div>
 
-        <div class="d-flex flex-column gap-2">
-            <button type="submit" form="filterForm"
-                class="btn btn-primary px-4 py-2 rounded-pill fw-semibold">
-                Filtra
-            </button>
+        <form method="GET"
+            action="{{ route('admin.posts.index') }}">
 
-            @if(request('category_id'))
-            <a href="{{ route('admin.posts.index') }}"
-                class="btn btn-outline-secondary rounded-pill">
-                ↺
-            </a>
-            @endif
-        </div>
+            <div class="row g-3 align-items-end">
+
+                <div class="col-md-4">
+
+                    <label for="category_id"
+                        class="form-label">
+
+                        Categoria
+
+                    </label>
+
+                    <select name="category_id"
+                        id="category_id"
+                        class="form-select dashboard-input">
+
+                        <option value="">
+                            Tutte
+                        </option>
+
+                        @foreach($categories as $category)
+
+                        <option value="{{ $category->id }}"
+                            {{ request('category_id') == $category->id ? 'selected' : '' }}>
+
+                            {{ $category->name }}
+
+                        </option>
+
+                        @endforeach
+
+                    </select>
+
+                </div>
+
+                <div class="col-md-4">
+
+                    <label for="sort"
+                        class="form-label">
+
+                        Ordina per
+
+                    </label>
+
+                    <select name="sort"
+                        id="sort"
+                        class="form-select dashboard-input">
+
+                        <option value="">
+                            Seleziona
+                        </option>
+
+                        <option value="recent"
+                            {{ request('sort') == 'recent' ? 'selected' : '' }}>
+
+                            Più recenti
+
+                        </option>
+
+                        <option value="oldest"
+                            {{ request('sort') == 'oldest' ? 'selected' : '' }}>
+
+                            Meno recenti
+
+                        </option>
+
+                    </select>
+
+                </div>
+
+                <div class="col-md-4 d-flex gap-2">
+
+                    <button type="submit"
+                        class="dashboard-filter-btn w-100">
+
+                        Filtra
+
+                    </button>
+
+                    <a href="{{ route('admin.posts.index') }}"
+                        class="dashboard-reset-btn">
+
+                        ↺
+
+                    </a>
+
+                </div>
+
+            </div>
+
+        </form>
 
     </div>
 
-    {{-- NUOVO ARTICOLO --}}
-    <div class="d-flex justify-content-end mb-3">
-        <a href="{{ route('admin.posts.create') }}"
-            class="btn btn-success rounded-circle shadow-sm d-flex align-items-center justify-content-center"
-            style="width: 45px; height: 45px;">
-            +
-        </a>
-    </div>
+    <div class="dashboard-table-wrapper">
 
-    {{-- TABELLA --}}
-    <div class="card shadow-sm border-0 rounded-4">
-        <div class="card-body p-0">
+        <div class="table-responsive">
 
-            <table class="table align-middle mb-0">
-                <thead class="text-center">
+            <table class="dashboard-table">
+
+                <thead>
+
                     <tr>
-                        <th>Titolo</th>
+
+                        <th>Articolo</th>
                         <th>Categoria</th>
                         <th>Squadre</th>
+                        <th>Pubblicato</th>
                         <th class="text-center">Azioni</th>
+
                     </tr>
+
                 </thead>
 
                 <tbody>
+
                     @forelse($posts as $post)
 
                     <tr>
-                        <td class="fw-semibold">{{ $post->title }}</td>
+
+                        <td class="article-column">
+
+                            <div class="article-card-preview">
+
+                                <div class="article-image-wrapper">
+
+                                    @if($post->image)
+
+                                    <img src="{{ asset('storage/' . $post->image) }}"
+                                        alt="{{ $post->title }}"
+                                        class="article-preview-image">
+
+                                    @else
+
+                                    <div class="article-image-placeholder">
+
+                                        <i class="bi bi-image"></i>
+
+                                    </div>
+
+                                    @endif
+
+                                </div>
+
+                                <div class="article-content">
+
+                                    <div class="article-title-label">
+                                        Titolo articolo
+                                    </div>
+
+                                    <h3 class="article-title">
+                                        {{ $post->title }}
+                                    </h3>
+
+                                    <p>
+                                        {{ Str::limit(strip_tags($post->content), 90) }}
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+                        </td>
 
                         <td>
-                            <span class="badge bg-light text-dark rounded-pill">
+
+                            <span class="dashboard-category-badge">
+
                                 {{ $post->category->name ?? '-' }}
+
                             </span>
+
                         </td>
 
                         <td>
-                            @forelse($post->teams as $team)
-                            <span class="badge bg-light text-primary rounded-pill">
-                                {{ $team->name }}
+
+                            @if($post->teams->isNotEmpty())
+
+                            <div class="dashboard-team-list">
+
+                                @foreach($post->teams as $team)
+
+                                <span class="dashboard-team-badge"
+                                    style="background-color: {{ $team->color }};">
+
+                                    {{ $team->name }}
+
+                                </span>
+
+                                @endforeach
+
+                            </div>
+
+                            @else
+
+                            <span class="empty-label">
+                                Nessuna squadra
                             </span>
-                            @empty
-                            <span class="text-muted">-</span>
-                            @endforelse
+
+                            @endif
+
                         </td>
 
-                        <td class="text-center">
-                            <div class="d-flex justify-content-center gap-2">
+                        <td>
 
-                                <a href="{{ route('posts.show', $post) }}"
-                                    class="btn btn-sm btn-outline-secondary rounded-pill"
-                                    title="Visualizza">
+                            <div class="dashboard-date">
+
+                                <strong>
+                                    {{ $post->created_at->format('d/m/Y') }}
+                                </strong>
+
+                                <span>
+                                    {{ $post->created_at->diffForHumans() }}
+                                </span>
+
+                            </div>
+
+                        </td>
+
+                        <td>
+
+                            <div class="dashboard-actions">
+
+                                <a href="{{ route('posts.show', [
+                                    'post' => $post,
+                                    ...request()->query()
+                                ]) }}"
+                                    class="dashboard-action-btn view-btn">
+
                                     <i class="fas fa-eye"></i>
+
                                 </a>
 
                                 <a href="{{ route('admin.posts.edit', $post) }}"
-                                    class="btn btn-sm btn-outline-primary rounded-pill"
-                                    title="Modifica">
-                                    <i class="fas fa-edit"></i>
+                                    class="dashboard-action-btn edit-btn">
+
+                                    <i class="fas fa-pen"></i>
+
                                 </a>
 
                                 <button
-                                    class="btn btn-sm btn-outline-danger rounded-pill"
+                                    class="dashboard-action-btn delete-btn"
                                     data-bs-toggle="modal"
-                                    data-bs-target="#deleteModal{{ $post->id }}"
-                                    title="Elimina">
+                                    data-bs-target="#deleteModal{{ $post->id }}">
+
                                     <i class="bi bi-trash-fill"></i>
+
                                 </button>
 
                             </div>
+
                         </td>
+
                     </tr>
-
-                    {{-- MODAL --}}
-                    <div class="modal fade" id="deleteModal{{ $post->id }}" tabindex="-1">
-                        <div class="modal-dialog modal-dialog-centered">
-                            <div class="modal-content rounded-4">
-
-                                <div class="modal-header border-0">
-                                    <h5 class="modal-title fw-semibold">Conferma eliminazione</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                                </div>
-
-                                <div class="modal-body">
-                                    Vuoi eliminare <strong>{{ $post->title }}</strong>?
-                                </div>
-
-                                <div class="modal-footer border-0">
-
-                                    <button type="button"
-                                        class="btn btn-primary btn-outline-secondary rounded-pill"
-                                        data-bs-dismiss="modal">
-                                        Annulla
-                                    </button>
-
-                                    <form action="{{ route('admin.posts.destroy', $post) }}" method="POST">
-                                        @csrf
-                                        @method('DELETE')
-
-                                        <button type="submit"
-                                            class="btn btn-danger rounded-pill">
-                                            Elimina
-                                        </button>
-                                    </form>
-
-                                </div>
-
-                            </div>
-                        </div>
-                    </div>
 
                     @empty
+
                     <tr>
-                        <td colspan="4" class="text-center text-muted py-4">
-                            Nessun articolo trovato
+
+                        <td colspan="5">
+
+                            <div class="dashboard-empty-state">
+
+                                <i class="bi bi-journal-x"></i>
+
+                                <h4>
+                                    Nessun articolo trovato
+                                </h4>
+
+                                <p>
+                                    Inizia creando il tuo primo articolo
+                                </p>
+
+                            </div>
+
                         </td>
+
                     </tr>
+
                     @endforelse
 
                 </tbody>
+
             </table>
 
         </div>
+
     </div>
 
 </div>
+
+@foreach($posts as $post)
+<div class="modal fade"
+    id="deleteModal{{ $post->id }}"
+    tabindex="-1"
+    aria-labelledby="deleteModalTitle{{ $post->id }}"
+    aria-hidden="true">
+
+    <div class="modal-dialog modal-dialog-centered">
+
+        <div class="modal-content border-0 rounded-4 shadow-lg">
+
+            <div class="modal-header border-0">
+
+                <h5 class="modal-title fw-bold" id="deleteModalTitle{{ $post->id }}">
+                    Conferma eliminazione
+                </h5>
+
+                <button type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                    aria-label="Chiudi">
+
+                </button>
+
+            </div>
+
+            <div class="modal-body">
+
+                Vuoi eliminare definitivamente
+                <strong>{{ $post->title }}</strong>?
+
+            </div>
+
+            <div class="modal-footer border-0">
+
+                <button type="button"
+                    class="btn btn-outline-secondary rounded-pill px-4"
+                    data-bs-dismiss="modal">
+
+                    Annulla
+
+                </button>
+
+                <form action="{{ route('admin.posts.destroy', $post) }}"
+                    method="POST"
+                    data-delete-form>
+
+                    @csrf
+                    @method('DELETE')
+
+                    <button type="submit"
+                        class="btn btn-danger rounded-pill px-4"
+                        data-loading-text="Eliminazione...">
+
+                        Elimina
+
+                    </button>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+@endforeach
 
 @endsection

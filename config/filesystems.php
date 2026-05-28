@@ -12,8 +12,8 @@ return [
     | based disks are available to your application for file storage.
     |
     */
-
-    'default' => env('FILESYSTEM_DISK', 'local'),
+//impostazione di fallback ovvero in questo momento stiamo indicano che i file vanno salvati nella chiave filesystem trovata nel nostro file env(public) altrimenti "forziamo" la direzione in public
+    'default' => env('FILESYSTEM_DISK', 'public'),
 
     /*
     |--------------------------------------------------------------------------
